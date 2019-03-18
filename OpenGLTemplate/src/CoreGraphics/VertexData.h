@@ -14,6 +14,14 @@ struct Point3D
 	float x, y, z;
 };
 
+struct Color
+{
+	float r = 0;
+	float g = 0;
+	float b = 0;
+	float a = 1;
+};
+
 enum Attribute
 {
 	POSITION,
@@ -26,7 +34,6 @@ enum Attribute
 // This contains all the data necessary to construct a VAO (VertexArray).
 // Data will be added through this class and this class will be
 // used to construct VertexArrays and Meshes.
-template <class Dimension>
 class VertexData
 {
 public:
@@ -35,8 +42,10 @@ public:
 	~VertexData() = default;
 
 private:
-	vector<Dimension> m_vVertices;
+	vector<float> m_vVertices;
 	vector<unsigned int> m_vuiIndices;
+
+	int m_pDimensions[5];
 };
 
 #endif

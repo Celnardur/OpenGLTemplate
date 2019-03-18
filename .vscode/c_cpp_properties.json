@@ -3,13 +3,13 @@
         {
 			"name": "Linux",
 			"includePath": [
-				"${workspaceFolder}/BasicOpenGLTemplate/includes"
+				"${workspaceFolder}/OpenGLTemplate/includes"
 			],
 			"compilerPath": "/usr/bin/g++",
 			"browse": {
 				"path": [
-					"${workspaceFolder}/BasicOpenGLTemplate/includes",
-					"${workspaceFolder}/BasicOpenGLTemplate/src"
+					"${workspaceFolder}/OpenGLTemplate/includes",
+					"${workspaceFolder}/OpenGLTemplate/src"
 				],
 				"limitSymbolsToIncludedHeaders": true
 			}
