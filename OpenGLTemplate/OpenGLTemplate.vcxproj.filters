@@ -66,6 +66,9 @@
     <ClCompile Include="src\CoreGraphics\Shader.cpp">
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\CoreGraphics\VertexData.cpp">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Input.h">
@@ -522,6 +525,9 @@
       <Filter>Includes\glm\simd</Filter>
     </ClInclude>
     <ClInclude Include="src\CoreGraphics\Shader.h">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CoreGraphics\VertexData.h">
       <Filter>Source Files\Core Graphics</Filter>
     </ClInclude>
   </ItemGroup>

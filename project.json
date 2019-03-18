@@ -1,0 +1,19 @@
+{
+	"Project Name": "BOGLT",
+	"Compiler": "g++",
+	"Flags": "-g -Wall -std=gnu++11",
+	"Src Root Dir": "./BasicOpenGLTemplate/src",
+	"Other Src Dirs": [],
+	"Include Dirs": [],
+	"3rd Party Include Dirs": ["./BasicOpenGLTemplate/includes"],
+	"Lib Dirs": ["./BasicOpenGLTemplate/libs/Linux"],
+	"Libs": [
+		"glfw3", "m", "GL", "X11",
+		"Xxf86vm", "Xrandr", "Xi",
+		"dl", "pthread", "Xinerama",
+		"Xcursor", "rt"
+	],
+	"Bin": "./bin",
+	"Obj Dir": "./bin/obj",
+	"Executable": true
+}

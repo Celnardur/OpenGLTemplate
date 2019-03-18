@@ -1,5 +1,6 @@
 #include <iostream>
 #include <GraphicsIncludes.h>
+#include "CoreGraphics/VertexData.h"
 #include <chrono>
 #include <thread>
 #include "Input.h"
@@ -33,6 +34,11 @@ int main()
 	// Stuff in these should be deleted before merging (unless it's a fast-forward merge).
 	// Initialize graphics here
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	Point2D pt;
+	pt.x = 2;
+	pt.y = 3;
+	std::cout << typeid(pt).name() << std::endl;
+	std::cout << (typeid(pt) == typeid(Point3D)) << std::endl;
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	// initialize timer variables

@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+			"name": "Linux",
+			"includePath": [
+				"${workspaceFolder}/BasicOpenGLTemplate/includes"
+			],
+			"compilerPath": "/usr/bin/g++",
+			"browse": {
+				"path": [
+					"${workspaceFolder}/BasicOpenGLTemplate/includes",
+					"${workspaceFolder}/BasicOpenGLTemplate/src"
+				],
+				"limitSymbolsToIncludedHeaders": true
+			}
+        }
+    ],
+    "version": 4
+}

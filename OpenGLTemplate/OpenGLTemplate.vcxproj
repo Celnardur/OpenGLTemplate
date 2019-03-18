@@ -124,6 +124,7 @@
     <ClCompile Include="includes\glm\detail\glm.cpp" />
     <ClCompile Include="src\CoreGraphics\glad.c" />
     <ClCompile Include="src\CoreGraphics\Shader.cpp" />
+    <ClCompile Include="src\CoreGraphics\VertexData.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -279,6 +280,7 @@
     <ClInclude Include="includes\KHR\khrplatform.h" />
     <ClInclude Include="includes\stb_image.h" />
     <ClInclude Include="src\CoreGraphics\Shader.h" />
+    <ClInclude Include="src\CoreGraphics\VertexData.h" />
     <ClInclude Include="src\Input.h" />
   </ItemGroup>
   <ItemGroup>
