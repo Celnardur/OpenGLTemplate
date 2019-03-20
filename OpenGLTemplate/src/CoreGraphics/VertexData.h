@@ -19,6 +19,13 @@ struct Color
 	float r = 0;
 	float g = 0;
 	float b = 0;
+};
+
+struct ColorA
+{
+	float r = 0;
+	float g = 0;
+	float b = 0;
 	float a = 1;
 };
 
@@ -38,14 +45,29 @@ class VertexData
 {
 public:
 	VertexData();
+	VertexData(Attribute iAttribute, const vector<Point3D> & vPos);
 
-	~VertexData() = default;
+	~VertexData();
+	VertexData(const VertexData & toCopy);
+	VertexData(VertexData && toMove) noexcept;
+	VertexData & operator=(VertexData toSwap);
+	friend void swap(VertexData & first, VertexData & second) noexcept;
+
+	void add(Attribute iAttribute, const vector<Point2D> & vPos);
+	void add(Attribute iAttribute, const vector<Point3D> & vPos);
+	void add(Attribute iAttribute, const vector<Color> & vPos);
+	void add(Attribute iAttribute, const vector<ColorA> & vPos);
+
+	void remove(Attribute iAttribute);
+
+	int getStride();
+	int * getDimensions();
 
 private:
-	vector<float> m_vVertices;
+	vector<float> m_vfVertices;
 	vector<unsigned int> m_vuiIndices;
 
-	int m_pDimensions[5];
+	int * m_pDimensions;
 };
 
 #endif

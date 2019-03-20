@@ -5,6 +5,9 @@
 #include <thread>
 #include "Input.h"
 
+using std::cout;
+using std::endl;
+
 // sleeps the current thread for dSleepTime seconds.
 inline void sleep(double dSleepTime)
 {
@@ -34,6 +37,8 @@ int main()
 	// Stuff in these should be deleted before merging (unless it's a fast-forward merge).
 	// Initialize graphics here
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	Color black;
+	cout << black << endl;
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	// initialize timer variables
