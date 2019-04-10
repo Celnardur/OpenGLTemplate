@@ -35,7 +35,8 @@ enum Attribute
 	COLOR,
 	TEXTURE,
 	NORMAL,
-	SPECULAR
+	SPECULAR,
+	LAST
 };
 
 // This contains all the data necessary to construct a VAO (VertexArray).
@@ -45,14 +46,17 @@ class VertexData
 {
 public:
 	VertexData();
+	VertexData(Attribute iAttribute, const vector<Point2D> & vPos);
 	VertexData(Attribute iAttribute, const vector<Point3D> & vPos);
 
-	~VertexData();
 	VertexData(const VertexData & toCopy);
-	VertexData(VertexData && toMove) noexcept;
-	VertexData & operator=(VertexData toSwap);
+	VertexData(VertexData && toCopy) noexcept;
+	VertexData& operator=(VertexData toCopy);
+	~VertexData();
+
 	friend void swap(VertexData & first, VertexData & second) noexcept;
 
+	void add(Attribute iAttribute, const vector<float> & vfPoints, int nDimension);
 	void add(Attribute iAttribute, const vector<Point2D> & vPos);
 	void add(Attribute iAttribute, const vector<Point3D> & vPos);
 	void add(Attribute iAttribute, const vector<Color> & vPos);
@@ -60,14 +64,22 @@ public:
 
 	void remove(Attribute iAttribute);
 
-	int getStride();
-	int * getDimensions();
+	void clear();
+
+	int getStride() const;
+	int getOffset(Attribute iAttribute) const;
+	void getDimensions(int pDimensions[LAST]) const;
+	vector<float> * synthesize() const;
+	void synthesize(vector<float> * vfVertices) const;
+
+	void test();
 
 private:
-	vector<float> m_vfVertices;
+	vector<float> (* m_vfVertices)[LAST];
 	vector<unsigned int> m_vuiIndices;
 
-	int * m_pDimensions;
+	int m_pDimensions[LAST];
+	size_t m_nVertices;
 };
 
 #endif
