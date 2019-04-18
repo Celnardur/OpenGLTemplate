@@ -37,39 +37,29 @@ int main()
 	// Stuff in these should be deleted before merging (unless it's a fast-forward merge).
 	// Initialize graphics here
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	VertexData data;
-	vector<Point2D> pos = {
-		{0, 0},
-		{0, 1},
-		{1, 1},
-		{1, 0}
+	struct point
+	{
+		int x, y;
 	};
-	vector<Point2D> textCord = {
-		{1, 2},
-		{3, 4},
-		{5, 6},
-		{7, 8}
-	};
-	data.add(POSITION, pos);
-	data.add(TEXTURE, textCord);
-	vector<float> * vertexArray = data.synthesize();
-	for (auto e : *vertexArray)
-		cout << e << ", ";
+
+	VertexData<point> items({ 2 });
+	cout << items.m_pDimensions[POSITION] << endl;
+	items.m_Vertices.push_back({ 1, 2 });
+	items.m_Vertices.push_back({ 3, 4 });
+	items.m_Vertices.push_back({ 5, 5 });
+	int * pVerts = &(items.m_Vertices[0].x);
+	for (auto e : items.m_Vertices)
+	{
+		cout << e.x << ", ";
+		cout << e.y << ", ";
+	}
 	cout << endl;
 
-	data.test();
-	delete vertexArray;
-
-	VertexData data1;
-	data1.add(POSITION, {1, 2, 5, 6, 9, 10}, 2);
-	data1.add(TEXTURE, {3, 4, 7, 8, 11, 12}, 2);
-	vertexArray = data1.synthesize();
-	for (auto e : *vertexArray)
-		cout << e << ", ";
+	for (int i = 0; i < items.m_Vertices.size() * 2; ++i)
+	{
+		cout << pVerts[i] << ", ";
+	}
 	cout << endl;
-	data1.test();
-	delete vertexArray;
-
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

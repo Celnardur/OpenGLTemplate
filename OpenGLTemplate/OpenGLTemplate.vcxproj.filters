@@ -66,7 +66,7 @@
     <ClCompile Include="src\CoreGraphics\Shader.cpp">
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\CoreGraphics\VertexData.cpp">
+    <ClCompile Include="src\CoreGraphics\Texture.cpp">
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -528,6 +528,15 @@
       <Filter>Source Files\Core Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\CoreGraphics\VertexData.h">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CoreGraphics\Texture.h">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CoreGraphics\GLIncludes.h">
       <Filter>Source Files\Core Graphics</Filter>
     </ClInclude>
   </ItemGroup>

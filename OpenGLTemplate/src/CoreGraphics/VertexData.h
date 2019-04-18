@@ -2,32 +2,7 @@
 #define VERTEX_DATA_H
 
 #include <vector>
-using std::vector;
-
-struct Point2D
-{
-	float x, y;
-};
-
-struct Point3D
-{
-	float x, y, z;
-};
-
-struct Color
-{
-	float r = 0;
-	float g = 0;
-	float b = 0;
-};
-
-struct ColorA
-{
-	float r = 0;
-	float g = 0;
-	float b = 0;
-	float a = 1;
-};
+#include "../utils.h"
 
 enum Attribute
 {
@@ -42,44 +17,61 @@ enum Attribute
 // This contains all the data necessary to construct a VAO (VertexArray).
 // Data will be added through this class and this class will be
 // used to construct VertexArrays and Meshes.
-class VertexData
+// This was designed with procedural generation in mind.
+// The api is the top priority followed by efficiency b/c this is
+// a loading task.
+// The template parameter is assumed to be a tightly packed structure
+// with a copy constructor (no pointers).
+// This class assumes you know what your doing.
+template<class Vertex>
+struct VertexData
 {
-public:
-	VertexData();
-	VertexData(Attribute iAttribute, const vector<Point2D> & vPos);
-	VertexData(Attribute iAttribute, const vector<Point3D> & vPos);
+	std::vector<Vertex> m_Vertices;
+	std::vector<unsigned int> m_vuiIndices;
 
-	VertexData(const VertexData & toCopy);
-	VertexData(VertexData && toCopy) noexcept;
-	VertexData& operator=(VertexData toCopy);
-	~VertexData();
+	unsigned int m_pDimensions[LAST];
 
-	friend void swap(VertexData & first, VertexData & second) noexcept;
+	std::string strTexture;
+	std::string strSpecularTexture;
 
-	void add(Attribute iAttribute, const vector<float> & vfPoints, int nDimension);
-	void add(Attribute iAttribute, const vector<Point2D> & vPos);
-	void add(Attribute iAttribute, const vector<Point3D> & vPos);
-	void add(Attribute iAttribute, const vector<Color> & vPos);
-	void add(Attribute iAttribute, const vector<ColorA> & vPos);
-
-	void remove(Attribute iAttribute);
-
-	void clear();
+	VertexData(std::vector<unsigned int> viDimensions);
 
 	int getStride() const;
 	int getOffset(Attribute iAttribute) const;
-	void getDimensions(int pDimensions[LAST]) const;
-	vector<float> * synthesize() const;
-	void synthesize(vector<float> * vfVertices) const;
 
 	void test();
-
-private:
-	vector<float> (* m_vfVertices)[LAST];
-	vector<unsigned int> m_vuiIndices;
-
-	int m_pDimensions[LAST];
-	size_t m_nVertices;
 };
+
+template <class Vertex>
+VertexData<Vertex>::VertexData(std::vector<unsigned int> viDimensions)
+{
+	myAssert(viDimensions.size() <= LAST, "Tried to create too many attributes.");
+	for(int i = 0; i < viDimensions.size(); ++i)
+	{
+		m_pDimensions[i] = viDimensions[i];
+	}
+}
+
+template <class Vertex>
+int VertexData<Vertex>::getStride() const
+{
+	int nSum = 0;
+	for (int e : m_pDimensions)
+	{
+		nSum += e;
+	}
+	return nSum;
+}
+
+template <class Vertex>
+int VertexData<Vertex>::getOffset(Attribute iAttribute) const
+{
+	int iOffset = 0;
+	for (int i = 0; i < iAttribute; ++i)
+	{
+		iOffset += m_pDimensions[i];
+	}
+	return iOffset;
+}
 
 #endif
