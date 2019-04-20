@@ -123,8 +123,10 @@
   <ItemGroup>
     <ClCompile Include="includes\glm\detail\glm.cpp" />
     <ClCompile Include="src\CoreGraphics\glad.c" />
+    <ClCompile Include="src\CoreGraphics\Mesh.cpp" />
     <ClCompile Include="src\CoreGraphics\Shader.cpp" />
     <ClCompile Include="src\CoreGraphics\Texture.cpp" />
+    <ClCompile Include="src\CoreGraphics\VertexArray.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -280,8 +282,10 @@
     <ClInclude Include="includes\KHR\khrplatform.h" />
     <ClInclude Include="includes\stb_image.h" />
     <ClInclude Include="src\CoreGraphics\GLIncludes.h" />
+    <ClInclude Include="src\CoreGraphics\Mesh.h" />
     <ClInclude Include="src\CoreGraphics\Shader.h" />
     <ClInclude Include="src\CoreGraphics\Texture.h" />
+    <ClInclude Include="src\CoreGraphics\VertexArray.h" />
     <ClInclude Include="src\CoreGraphics\VertexData.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\utils.h" />
@@ -401,6 +405,10 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\Windows\glfw3.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Shaders\colorShader.txt" />
+    <Text Include="src\Shaders\vertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

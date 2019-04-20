@@ -4,6 +4,8 @@
 #include <chrono>
 #include <thread>
 #include "Input.h"
+#include "CoreGraphics/Mesh.h"
+#include "CoreGraphics/Shader.h"
 
 using std::cout;
 using std::endl;
@@ -39,27 +41,28 @@ int main()
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	struct point
 	{
-		int x, y;
+		float x, y;
 	};
 
-	VertexData<point> items({ 2 });
-	cout << items.m_pDimensions[POSITION] << endl;
-	items.m_Vertices.push_back({ 1, 2 });
-	items.m_Vertices.push_back({ 3, 4 });
-	items.m_Vertices.push_back({ 5, 5 });
-	int * pVerts = &(items.m_Vertices[0].x);
-	for (auto e : items.m_Vertices)
-	{
-		cout << e.x << ", ";
-		cout << e.y << ", ";
-	}
-	cout << endl;
+	VertexData<point> squarePoints({ 2 });
+	squarePoints.m_Vertices = {
+		{0.5f,  0.5f},  // top right
+		{ 0.5f, -0.5f}, // bottom right
+		{-0.5f, -0.5f},  // bottom left
+		{-0.5f,  0.5f}  // top left
+	};
 
-	for (int i = 0; i < items.m_Vertices.size() * 2; ++i)
-	{
-		cout << pVerts[i] << ", ";
-	}
-	cout << endl;
+	squarePoints.m_vuiIndices = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+
+	Mesh mesh;
+	mesh.create<point>(squarePoints);
+
+	Shader plainShader("src/Shaders/vertexShader.txt", "src/Shaders/colorShader.txt");
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -114,6 +117,9 @@ int main()
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		plainShader.use();
+		mesh.render();
         // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         // swap buffer to show screen
@@ -165,7 +171,7 @@ GLFWwindow * init(const std::string & strWindowTitle, int iWidth, int iHeight)
 	// sets the viewport to the right initial size
 	glViewport(0, 0, iWidth, iHeight);
 
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	return pWindow;
 }

@@ -49,6 +49,9 @@
     <Filter Include="Libs\Windows">
       <UniqueIdentifier>{d7e56cc6-1123-489e-b684-678c709ef101}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{f3b1a296-64d6-4433-8c45-24c4fe1ebf35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Input.cpp">
@@ -67,6 +70,12 @@
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\CoreGraphics\Texture.cpp">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CoreGraphics\VertexArray.cpp">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CoreGraphics\Mesh.cpp">
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -539,6 +548,12 @@
     <ClInclude Include="src\CoreGraphics\GLIncludes.h">
       <Filter>Source Files\Core Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\CoreGraphics\VertexArray.h">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CoreGraphics\Mesh.h">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="includes\glm\detail\func_common.inl">
@@ -879,5 +894,13 @@
     <Library Include="libs\Windows\glfw3.lib">
       <Filter>Libs\Windows</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Shaders\colorShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\vertexShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

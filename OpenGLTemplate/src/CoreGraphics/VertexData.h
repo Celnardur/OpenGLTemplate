@@ -18,11 +18,9 @@ enum Attribute
 // Data will be added through this class and this class will be
 // used to construct VertexArrays and Meshes.
 // This was designed with procedural generation in mind.
-// The api is the top priority followed by efficiency b/c this is
-// a loading task.
-// The template parameter is assumed to be a tightly packed structure
-// with a copy constructor (no pointers).
-// This class assumes you know what your doing.
+// The api is the top priority followed by efficiency b/c this is a loading task.
+// The template parameter is assumed to be a tightly packed structure of floats.
+// This struct assumes you know what your doing.
 template<class Vertex>
 struct VertexData
 {
@@ -31,36 +29,31 @@ struct VertexData
 
 	unsigned int m_pDimensions[LAST];
 
-	std::string strTexture;
-	std::string strSpecularTexture;
-
 	VertexData(std::vector<unsigned int> viDimensions);
 
 	int getStride() const;
 	int getOffset(Attribute iAttribute) const;
 
-	void test();
 };
 
 template <class Vertex>
 VertexData<Vertex>::VertexData(std::vector<unsigned int> viDimensions)
 {
 	myAssert(viDimensions.size() <= LAST, "Tried to create too many attributes.");
-	for(int i = 0; i < viDimensions.size(); ++i)
+
+	for(int i = 0; i < LAST; ++i)
 	{
-		m_pDimensions[i] = viDimensions[i];
+		if (i < viDimensions.size())
+			m_pDimensions[i] = viDimensions[i];
+		else
+			m_pDimensions[i] = 0;
 	}
 }
 
 template <class Vertex>
 int VertexData<Vertex>::getStride() const
 {
-	int nSum = 0;
-	for (int e : m_pDimensions)
-	{
-		nSum += e;
-	}
-	return nSum;
+	return sizeof(Vertex);
 }
 
 template <class Vertex>
@@ -71,7 +64,7 @@ int VertexData<Vertex>::getOffset(Attribute iAttribute) const
 	{
 		iOffset += m_pDimensions[i];
 	}
-	return iOffset;
+	return iOffset * sizeof(float);
 }
 
 #endif

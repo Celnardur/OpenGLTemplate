@@ -8,7 +8,7 @@ Texture::Texture(const std::string& strFile,
 {
 	m_iBorderCondition = iBorderCondition;
 	m_iFilterParam = iFilterParam;
-	m_uidTexture = -1;
+	m_uidTexture = 0;
 
 	int iWidth, iHeight, nChannels;
 	stbi_set_flip_vertically_on_load(true);
@@ -32,7 +32,7 @@ Texture::Texture(const std::vector<unsigned char>& vchData, int width, int heigh
 
 	m_iBorderCondition = iBorderCondition;
 	m_iFilterParam = iFilterParam;
-	m_uidTexture = -1;
+	m_uidTexture = 0;
 	this->sendData(&(vchData[0]), width, height, nChannels);
 }
 
@@ -75,8 +75,7 @@ void Texture::sendData(const unsigned char* data, int iWidth, int iHeight, int n
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-
-void Texture::render(int iTextureUnit) const
+void Texture::activate(int iTextureUnit) const
 {
 	myAssert(iTextureUnit < 16, "Cannot have more than 16 textures active");
 

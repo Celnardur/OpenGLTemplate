@@ -12,7 +12,7 @@ public:
 	Texture(const std::vector<unsigned char> & vchData, int width, int height, int nChannels,
 		int iBorderCondition = GL_REPEAT, int iFilterParam = GL_NEAREST);
 
-	void render(int iTextureUnit) const;
+	void activate(int iTextureUnit) const;
 	void destroy();
 
 private:
