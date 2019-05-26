@@ -3,6 +3,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+Texture::Texture()
+{
+	m_uidTexture = 0;
+	m_iBorderCondition = GL_REPEAT;
+	m_iFilterParam = GL_NEAREST;
+}
+
 Texture::Texture(const std::string& strFile,
 	int iBorderCondition, int iFilterParam)
 {
@@ -12,6 +19,7 @@ Texture::Texture(const std::string& strFile,
 
 	int iWidth, iHeight, nChannels;
 	stbi_set_flip_vertically_on_load(true);
+
 	unsigned char * data = stbi_load(strFile.c_str(), &iWidth, &iHeight, &nChannels, 0);
 
 	if (data)

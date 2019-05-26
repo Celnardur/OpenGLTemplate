@@ -32,11 +32,13 @@ private:
 template <class Vertex>
 void VertexArray::create(const VertexData<Vertex>& vertexData)
 {
-	m_bHasIndices = !vertexData.m_vuiIndices.empty();
+	m_bHasIndices = !vertexData.vuiIndices.empty();
 	if (m_bHasIndices)
-		m_nDrawPoints = vertexData.m_vuiIndices.size();
+		m_nDrawPoints = vertexData.vuiIndices.size();
 	else
-		m_nDrawPoints = vertexData.m_Vertices.size();
+		m_nDrawPoints = vertexData.vertices.size();
+
+
 
 	int iStride = vertexData.getStride();
 
@@ -46,25 +48,25 @@ void VertexArray::create(const VertexData<Vertex>& vertexData)
 	glBindVertexArray(m_uidVertexArrayObject);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_uidVertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, iStride * vertexData.m_Vertices.size(),
-		&(vertexData.m_Vertices[0]), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, iStride * vertexData.vertices.size(),
+		&(vertexData.vertices[0]), GL_STATIC_DRAW);
 
 	if (m_bHasIndices)
 	{
 		glGenBuffers(1, &m_uidElementBufferObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_uidElementBufferObject);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexData.m_vuiIndices.size(),
-			&(vertexData.m_vuiIndices[0]), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexData.vuiIndices.size(),
+			&(vertexData.vuiIndices[0]), GL_STATIC_DRAW);
 	}
 
 	int iOffset = 0;
 	for (int i = 0; i < LAST; ++i)
 	{
-		if (vertexData.m_pDimensions[i] > 0)
+		if (vertexData.aDimensions[i] > 0)
 		{
-			glVertexAttribPointer(i, vertexData.m_pDimensions[i], GL_FLOAT, GL_FALSE,
+			glVertexAttribPointer(i, vertexData.aDimensions[i], GL_FLOAT, GL_FALSE,
 				iStride, (void*)iOffset);
-			iOffset += vertexData.m_pDimensions[i] * sizeof(float);
+			iOffset += vertexData.aDimensions[i] * sizeof(float);
 			m_vcAttributes.push_back(i);
 		}
 	}

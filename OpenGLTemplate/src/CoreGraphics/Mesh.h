@@ -3,6 +3,7 @@
 
 #include "VertexArray.h"
 #include "Texture.h"
+#include "Shader.h"
 
 
 class Mesh
@@ -11,10 +12,7 @@ public:
 	Mesh();
 
 	template<class Vertex>
-	void create(VertexData<Vertex> vertices, std::vector<Texture> textures = {},
-		bool bUseBlending = false);
-
-	void create(VertexArray vao, std::vector<Texture> textures = {},
+	void create(const VertexData<Vertex> & vertices, const Texture & texture = {},
 		bool bUseBlending = false);
 
 	void render();
@@ -22,17 +20,19 @@ public:
 
 private:
 	VertexArray m_vao;
-	std::vector<Texture> m_textures;
+	Texture m_texture;
+	Shader m_shader;
 
 	bool m_bUseBlending;
 };
 
 template <class Vertex>
-void Mesh::create(VertexData<Vertex> vertices, std::vector<Texture> textures, bool bUseBlending)
+void Mesh::create(const VertexData<Vertex> & vertices, const Texture & texture,
+	bool bUseBlending)
 {
-	myAssert(textures.size() <= 16, "Cannot have more than 16 textures.");
 	m_vao.create<Vertex>(vertices);
-	m_textures = textures;
+	m_texture = texture;
+	m_shader = Shader(vertices.aDimensions);
 	m_bUseBlending = bUseBlending;
 }
 

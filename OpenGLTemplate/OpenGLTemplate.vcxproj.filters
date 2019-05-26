@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{f3b1a296-64d6-4433-8c45-24c4fe1ebf35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{91d95a54-7591-42db-bf70-44b8abca3af7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Input.cpp">
@@ -76,6 +79,9 @@
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\CoreGraphics\Mesh.cpp">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CoreGraphics\BufferMap.cpp">
       <Filter>Source Files\Core Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -554,6 +560,15 @@
     <ClInclude Include="src\CoreGraphics\Mesh.h">
       <Filter>Source Files\Core Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Camera\Camera.h">
+      <Filter>Source Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera\FirstPersonCamera.h">
+      <Filter>Source Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CoreGraphics\BufferMap.h">
+      <Filter>Source Files\Core Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="includes\glm\detail\func_common.inl">
@@ -900,6 +915,27 @@
       <Filter>Source Files\Shaders</Filter>
     </Text>
     <Text Include="src\Shaders\vertexShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\ColorAndTextureFragmentShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\ColorFragmentShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\LightingShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\PlainFragmentShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\TextFragmentShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\TextureFragmentShader.txt">
+      <Filter>Source Files\Shaders</Filter>
+    </Text>
+    <Text Include="src\Shaders\TrueTextFragmentShader.txt">
       <Filter>Source Files\Shaders</Filter>
     </Text>
   </ItemGroup>

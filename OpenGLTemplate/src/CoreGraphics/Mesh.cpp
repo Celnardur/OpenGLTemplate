@@ -5,16 +5,9 @@ Mesh::Mesh()
 	m_bUseBlending = false;
 }
 
-void Mesh::create(VertexArray vao, std::vector<Texture> textures, bool bUseBlending)
-{
-	myAssert(textures.size() <= 16, "Cannot have more than 16 textures.");
-	m_vao = vao;
-	m_textures = textures;
-	m_bUseBlending = bUseBlending;
-}
-
 void Mesh::render()
 {
+	m_shader.use();
 	if (m_bUseBlending)
 	{
 		glEnable(GL_BLEND);
@@ -22,8 +15,7 @@ void Mesh::render()
 	}
 
 	m_vao.bind();
-	for (int i = 0; i < m_textures.size(); ++i)
-		m_textures[i].activate(i);
+	m_texture.activate(0);
 
 	m_vao.render();
 
@@ -36,6 +28,5 @@ void Mesh::render()
 void Mesh::destroy()
 {
 	m_vao.destroy();
-	for (Texture e : m_textures)
-		e.destroy();
+	m_texture.destroy();
 }

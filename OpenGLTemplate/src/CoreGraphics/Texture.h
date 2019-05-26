@@ -7,6 +7,7 @@
 class Texture
 {
 public:
+	Texture();
 	Texture(const std::string & strFile,
 		int iBorderCondition = GL_REPEAT, int iFilterParam = GL_NEAREST);
 	Texture(const std::vector<unsigned char> & vchData, int width, int height, int nChannels,

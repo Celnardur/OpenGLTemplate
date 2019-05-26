@@ -1,11 +1,11 @@
 #include <iostream>
-#include <GraphicsIncludes.h>
-#include "CoreGraphics/VertexData.h"
 #include <chrono>
 #include <thread>
+#include <cstdlib>
 #include "Input.h"
 #include "CoreGraphics/Mesh.h"
 #include "CoreGraphics/Shader.h"
+#include "CoreGraphics/BufferMap.h"
 
 using std::cout;
 using std::endl;
@@ -14,6 +14,18 @@ using std::endl;
 inline void sleep(double dSleepTime)
 {
 	std::this_thread::sleep_for(std::chrono::nanoseconds(int(dSleepTime * 1.0e9)));
+}
+
+bool checkVector(const std::vector<int> & vals, int num)
+{
+	for (int i = 0; i < vals.size(); ++i)
+	{
+		if (vals[i] == num)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 GLFWwindow * init(const std::string & strWindowTitle, int iWidth, int iHeight);
@@ -43,24 +55,91 @@ int main()
 	{
 		float x, y;
 	};
-
-	VertexData<point> squarePoints({ 2 });
-	squarePoints.m_Vertices = {
-		{0.5f,  0.5f},  // top right
-		{ 0.5f, -0.5f}, // bottom right
-		{-0.5f, -0.5f},  // bottom left
-		{-0.5f,  0.5f}  // top left
+	struct Vertex
+	{
+		float x, y;
+		float r, g, b;
+		float j, k;
 	};
 
-	squarePoints.m_vuiIndices = {  // note that we start from 0!
+
+	std::vector<int> ivcRand;
+	BufferMap bmRand;
+	int iToInsert;
+
+	for (int i = 0; i < 10000; ++i)
+	{
+		iToInsert = rand();
+		bmRand.insert(iToInsert, iToInsert);
+		ivcRand.push_back(iToInsert);
+	}
+
+	for (auto e : ivcRand)
+	{
+		if (bmRand[e] != e)
+		{
+			std::cout << "Failed to Store: " << e << std::endl;
+		}
+	}
+
+	std::cout << "Started BufferMap" << std::endl;
+	for (auto e : ivcRand)
+	{
+		if (!bmRand.check(e))
+		{
+			std::cout << "Check Failed at: " << e << std::endl;
+		}
+	}
+	std::cout << "Finished BufferMap" << std::endl;
+
+	std::cout << "Started Vector" << std::endl;
+	for (auto e : ivcRand)
+	{
+		checkVector(ivcRand, e);
+	}
+	std::cout << "Started Vector" << std::endl;
+
+
+	VertexData<Vertex> squarePoints({ 2, 3 });
+	squarePoints.vertices = {
+		{ 0.5f,  0.5f,    1.0f, 0.0f, 0.0f},  // top right
+		{ 0.5f, -0.5f,    0.0f, 1.0f, 0.0f},  // bottom right
+		{-0.5f, -0.5f,    0.0f, 0.0f, 1.0f},  // bottom left
+		{-0.5f,  0.5f,    1.0f, 1.0f, 0.0f}   // top left
+	};
+
+	//VertexData<Vertex> squarePoints({ 2, 0, 2 });
+	//squarePoints.vertices = {
+	//	{ 0.5f,  0.5f,     1.0f, 1.0f},  // top right
+	//	{ 0.5f, -0.5f,     1.0f, 0.0f},  // bottom right
+	//	{-0.5f, -0.5f,     0.0f, 0.0f},  // bottom left
+	//	{-0.5f,  0.5f,     0.0f, 1.0f}   // top left
+	//};
+
+	//VertexData<Vertex> squarePoints({ 2, 3, 2 });
+	//squarePoints.vertices = {
+	//	{ 0.5f,  0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f},  // top right
+	//	{ 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,    1.0f, 0.0f},  // bottom right
+	//	{-0.5f, -0.5f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f},  // bottom left
+	//	{-0.5f,  0.5f,    1.0f, 1.0f, 0.0f,    0.0f, 1.0f}   // top left
+	//};
+
+	squarePoints.vuiIndices = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
 
-	Mesh mesh;
-	mesh.create<point>(squarePoints);
+	VertexData<Vertex> second = squarePoints;
 
-	Shader plainShader("src/Shaders/vertexShader.txt", "src/Shaders/colorShader.txt");
+	Texture texture("Resources/container.jpg");
+
+	Mesh mesh;
+	Mesh mesh2;
+	mesh.create<Vertex>(squarePoints);
+	mesh2.create<Vertex>(squarePoints);
+
+
+
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -81,8 +160,7 @@ int main()
 			pdFrameTimes[iIndex] = 1.0 / dFrameTime;
 			iIndex++;
 		}
-
-		if (iIndex == 30)
+		else
 		{
 			double sum = 0;
 			for (int i = 0; i < 30; i++)
@@ -118,7 +196,6 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		plainShader.use();
 		mesh.render();
         // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -134,6 +211,7 @@ int main()
 
     // Clean up
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	mesh.destroy();
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
 

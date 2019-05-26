@@ -2,7 +2,7 @@
 #define VERTEX_DATA_H
 
 #include <vector>
-#include "../utils.h"
+#include <array>
 
 enum Attribute
 {
@@ -14,6 +14,8 @@ enum Attribute
 	LAST
 };
 
+
+
 // This contains all the data necessary to construct a VAO (VertexArray).
 // Data will be added through this class and this class will be
 // used to construct VertexArrays and Meshes.
@@ -24,29 +26,29 @@ enum Attribute
 template<class Vertex>
 struct VertexData
 {
-	std::vector<Vertex> m_Vertices;
-	std::vector<unsigned int> m_vuiIndices;
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> vuiIndices;
 
-	unsigned int m_pDimensions[LAST];
+	std::array<unsigned int, LAST> aDimensions;
 
-	VertexData(std::vector<unsigned int> viDimensions);
+	VertexData(const std::vector<unsigned int> & viDimensions);
 
 	int getStride() const;
 	int getOffset(Attribute iAttribute) const;
 
+	uint64_t hashVertices();
+	uint64_t hashIndices();
 };
 
 template <class Vertex>
-VertexData<Vertex>::VertexData(std::vector<unsigned int> viDimensions)
+VertexData<Vertex>::VertexData(const std::vector<unsigned int> & viDimensions)
 {
-	myAssert(viDimensions.size() <= LAST, "Tried to create too many attributes.");
-
-	for(int i = 0; i < LAST; ++i)
+	for(unsigned int i = 0; i < LAST; ++i)
 	{
 		if (i < viDimensions.size())
-			m_pDimensions[i] = viDimensions[i];
+			aDimensions[i] = viDimensions[i];
 		else
-			m_pDimensions[i] = 0;
+			aDimensions[i] = 0;
 	}
 }
 
@@ -62,9 +64,41 @@ int VertexData<Vertex>::getOffset(Attribute iAttribute) const
 	int iOffset = 0;
 	for (int i = 0; i < iAttribute; ++i)
 	{
-		iOffset += m_pDimensions[i];
+		iOffset += aDimensions[i];
 	}
 	return iOffset * sizeof(float);
+}
+
+#define FNV_OFFSET_BASIS (0xcbf29ce484222325ULL)
+#define FNV_PRIME (0x100000001b3ULL)
+
+template <class Vertex>
+uint64_t VertexData<Vertex>::hashVertices()
+{
+	uint64_t hash = FNV_OFFSET_BASIS;
+	char * data = (char*)&(vertices[0]);
+	for (int i = 0; i < vertices.size() * sizeof(Vertex); ++i)
+	{
+		hash ^= data[i];
+		hash *= FNV_PRIME;
+	}
+
+	return hash;
+}
+
+template <class Vertex>
+uint64_t VertexData<Vertex>::hashIndices()
+{
+	uint64_t hash = FNV_OFFSET_BASIS;
+	char * data = (char*)&(vuiIndices[0]);
+	for (int i = 0; i < vuiIndices.size() * sizeof(vuiIndices); ++i)
+	{
+		hash ^= data[i];
+		hash *= FNV_PRIME;
+	}
+
+	return hash;
+
 }
 
 #endif

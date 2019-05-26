@@ -1,26 +1,19 @@
 #ifndef SHADER_H
 #define SHADER_H
-// Custom Class to handle shaders based off of code written and copyrighted by Joey de Vries
-// https://learnopengl.com/Getting-started/Shaders
-// https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_s.h
-// https://creativecommons.org/licenses/by-nc/4.0/legalcode
-// Code is free to modify and use. 
-//
-// Modified by Aaron Dorrance
 
 #include <GraphicsIncludes.h>
 #include <string>
+#include <vector>
+#include "../CoreGraphics/VertexData.h"
 
 class Shader
 {
 public:
-	// the program ID
-	unsigned int id;
-
 	// constructor reads and builds the shader
-	Shader() = default;
+	Shader() { id = 0; };
 	Shader(const GLchar * vertexPath, const GLchar * fragmentPath, const GLchar * geoPath);
 	Shader(const GLchar * vertexPath, const GLchar * fragmentPath);
+	Shader(const std::array<unsigned int, LAST> & aDimensions, bool bHasLighting = false);
 
 	// use/activate the shader
 	void use();
@@ -31,11 +24,19 @@ public:
 	void setUniform(const std::string &name, float one, float two, float three, float four);
 
 	void setUniform(const std::string &name, glm::vec3 data);
-	
+
 	void setUniformI(const std::string &name, int one);
 
 	void setUniform(const std::string &name, glm::mat4 transform);
-	
+
+	static std::string  readShader(const std::string & path);
+	static unsigned int compileShader(const char * code, GLenum type);
+	static unsigned int linkShader(const std::vector<unsigned int> & programs);
+
+private:
+	// the program ID
+	unsigned int id;
+
 };
 
 inline void Shader::use()
