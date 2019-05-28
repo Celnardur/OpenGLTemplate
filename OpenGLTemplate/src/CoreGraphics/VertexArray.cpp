@@ -37,3 +37,36 @@ void VertexArray::destroy()
 	glDeleteBuffers(1, &m_uidVertexBufferObject);
 	glDeleteBuffers(1, &m_uidElementBufferObject);
 }
+
+unsigned int VertexArray::bufferData(uint64_t ui64Hash, int iBufferType, size_t szData, void* pData)
+{
+	static BufferMap bmVBO;
+	static BufferMap bmEBO;
+
+	assert(iBufferType == GL_ARRAY_BUFFER || iBufferType == GL_ELEMENT_ARRAY_BUFFER);
+
+	BufferMap * pbmUsed;
+	if (iBufferType == GL_ARRAY_BUFFER)
+		pbmUsed = &bmVBO;
+	else
+		pbmUsed = &bmEBO;
+
+	// Store ids in hash table to avoid resending data to GPU
+	// Hash map where key is the hash of the Vertices and data is ID
+	unsigned int uidBuffer = (*pbmUsed)[ui64Hash];
+	if (uidBuffer)
+	{
+		std::cout << "Using ID: " << uidBuffer << std::endl;
+		glBindBuffer(iBufferType, uidBuffer);
+	}
+	else
+	{
+		glGenBuffers(1, &uidBuffer);
+		glBindBuffer(iBufferType, uidBuffer);
+		glBufferData(iBufferType, szData, pData, GL_STATIC_DRAW);
+		pbmUsed->insert(ui64Hash, uidBuffer);
+	}
+
+	return uidBuffer;
+}
+

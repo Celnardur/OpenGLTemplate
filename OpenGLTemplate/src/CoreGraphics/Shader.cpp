@@ -2,12 +2,24 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <cassert>
-#include <map>
 #include <bitset>
 #include "BufferMap.h"
 
+#define FNV_OFFSET_BASIS (0xcbf29ce484222325ULL)
+#define FNV_PRIME (0x100000001b3ULL)
+
+uint64_t hashString(const std::string & strToHash)
+{
+	uint64_t hash = FNV_OFFSET_BASIS;
+	for (char e : strToHash)
+	{
+		hash ^= e;
+		hash *= FNV_PRIME;
+	}
+
+	return hash;
+}
 
 Shader::Shader(const GLchar * vertexPath, const GLchar * fragmentPath, const GLchar * geoPath)
 {
@@ -15,12 +27,21 @@ Shader::Shader(const GLchar * vertexPath, const GLchar * fragmentPath, const GLc
 	std::string fragCode = readShader(fragmentPath);
 	std::string geoCode = readShader(fragmentPath);
 
+	uint64_t ui64ShaderHash = hashString(vertCode + fragCode + geoCode);
+
+	static BufferMap bmShaders;
+
+	id = bmShaders[ui64ShaderHash];
+	if (id)
+		return;
+
 	std::vector<unsigned int> programs;
 	programs.push_back(compileShader(vertCode.c_str(), GL_VERTEX_SHADER));
 	programs.push_back(compileShader(fragCode.c_str(), GL_FRAGMENT_SHADER));
 	programs.push_back(compileShader(geoCode.c_str(), GL_GEOMETRY_SHADER));
 
 	id = linkShader(programs);
+	bmShaders.insert(ui64ShaderHash, id);
 }
 
 Shader::Shader(const GLchar * vertexPath, const GLchar * fragmentPath)
@@ -28,11 +49,20 @@ Shader::Shader(const GLchar * vertexPath, const GLchar * fragmentPath)
 	std::string vertCode = readShader(vertexPath);
 	std::string fragCode = readShader(fragmentPath);
 
+	uint64_t ui64ShaderHash = hashString(vertCode + fragCode);
+
+	static BufferMap bmShaders;
+
+	id = bmShaders[ui64ShaderHash];
+	if (id)
+		return;
+
 	std::vector<unsigned int> programs;
 	programs.push_back(compileShader(vertCode.c_str(), GL_VERTEX_SHADER));
 	programs.push_back(compileShader(fragCode.c_str(), GL_FRAGMENT_SHADER));
 
 	id = linkShader(programs);
+	bmShaders.insert(ui64ShaderHash, id);
 }
 
 std::string attributeToStr(Attribute type)
@@ -184,27 +214,26 @@ Shader::Shader(const std::array<unsigned int, LAST> & aDimensions, bool bHasLigh
 	if (bHasLighting)
 		shaderHash += 1;
 
-	std::cout << "Shader Hash:" << std::bitset<32>(shaderHash) << std::endl;
+	//std::cout << "Shader Hash:" << std::bitset<32>(shaderHash) << std::endl;
 
 	// use hash map to check if previously used shader
 	static BufferMap generatedShaders;
-	static std::map<uint64_t, unsigned int> madeShaders;
 
 	id = generatedShaders[shaderHash];
 	if (id)
 	{
-		std::cout << "Using ID: " << id << std::endl;
+		//std::cout << "Using ID: " << id << std::endl;
 		return;
 	}
 
 
 	std::string strVertexShader = genVertexShader(aDimensions, bHasLighting);
 
-	std::cout << strVertexShader << std::endl;
+	//std::cout << strVertexShader << std::endl;
 
 	std::string strFragShader = genFragmentShader(aDimensions, bHasLighting);
 
-	std::cout << strFragShader << std::endl;
+	//std::cout << strFragShader << std::endl;
 
 	std::vector<unsigned int> programs;
 	programs.push_back(compileShader(strVertexShader.c_str(), GL_VERTEX_SHADER));
@@ -214,7 +243,7 @@ Shader::Shader(const std::array<unsigned int, LAST> & aDimensions, bool bHasLigh
 
 	// add id to the shader map
 	generatedShaders.insert(shaderHash, id);
-	std::cout << "Created ID: " << id << std::endl;
+	//std::cout << "Created ID: " << id << std::endl;
 }
 
 std::string Shader::readShader(const std::string & path)

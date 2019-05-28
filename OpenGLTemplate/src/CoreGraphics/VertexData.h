@@ -36,8 +36,8 @@ struct VertexData
 	int getStride() const;
 	int getOffset(Attribute iAttribute) const;
 
-	uint64_t hashVertices();
-	uint64_t hashIndices();
+	uint64_t hashVertices() const;
+	uint64_t hashIndices() const;
 };
 
 template <class Vertex>
@@ -73,7 +73,7 @@ int VertexData<Vertex>::getOffset(Attribute iAttribute) const
 #define FNV_PRIME (0x100000001b3ULL)
 
 template <class Vertex>
-uint64_t VertexData<Vertex>::hashVertices()
+uint64_t VertexData<Vertex>::hashVertices() const
 {
 	uint64_t hash = FNV_OFFSET_BASIS;
 	char * data = (char*)&(vertices[0]);
@@ -87,13 +87,12 @@ uint64_t VertexData<Vertex>::hashVertices()
 }
 
 template <class Vertex>
-uint64_t VertexData<Vertex>::hashIndices()
+uint64_t VertexData<Vertex>::hashIndices() const
 {
 	uint64_t hash = FNV_OFFSET_BASIS;
-	char * data = (char*)&(vuiIndices[0]);
-	for (int i = 0; i < vuiIndices.size() * sizeof(vuiIndices); ++i)
+	for (int i = 0; i < vuiIndices.size(); ++i)
 	{
-		hash ^= data[i];
+		hash ^= vuiIndices[i];
 		hash *= FNV_PRIME;
 	}
 

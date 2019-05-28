@@ -30,3 +30,10 @@ void Mesh::destroy()
 	m_vao.destroy();
 	m_texture.destroy();
 }
+
+void Mesh::setColor(float r, float g, float b, float a)
+{
+	m_shader.use();
+	m_shader.setUniform("color", r, g, b, a);
+}
+

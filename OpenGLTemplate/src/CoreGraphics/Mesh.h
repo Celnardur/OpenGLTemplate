@@ -18,6 +18,9 @@ public:
 	void render();
 	void destroy();
 
+	// Uniform Functions
+	void setColor(float r, float g, float b, float a = 1.0f);
+
 private:
 	VertexArray m_vao;
 	Texture m_texture;

@@ -3,6 +3,8 @@
 
 #include "GraphicsIncludes.h"
 #include "VertexData.h"
+#include "BufferMap.h"
+#include <iostream>
 
 class VertexArray
 {
@@ -27,6 +29,8 @@ private:
 	std::vector<int> m_vcAttributes;
 	bool m_bHasIndices;
 	size_t m_nDrawPoints;
+
+	static unsigned int bufferData(uint64_t ui64Hash, int iBufferType, size_t szData, void * pData);
 };
 
 template <class Vertex>
@@ -39,24 +43,32 @@ void VertexArray::create(const VertexData<Vertex>& vertexData)
 		m_nDrawPoints = vertexData.vertices.size();
 
 
-
 	int iStride = vertexData.getStride();
 
 	glGenVertexArrays(1, &m_uidVertexArrayObject);
-	glGenBuffers(1, &m_uidVertexBufferObject);
-
 	glBindVertexArray(m_uidVertexArrayObject);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_uidVertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, iStride * vertexData.vertices.size(),
-		&(vertexData.vertices[0]), GL_STATIC_DRAW);
+	uint64_t ui64VerticesHash = vertexData.hashVertices();
+	std::cout << "Vertices Hash: " << ui64VerticesHash << std::endl;
+
+	this->bufferData(
+		ui64VerticesHash,
+		GL_ARRAY_BUFFER,
+		iStride * vertexData.vertices.size(),
+		(void*)&(vertexData.vertices[0])
+	);
 
 	if (m_bHasIndices)
 	{
-		glGenBuffers(1, &m_uidElementBufferObject);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_uidElementBufferObject);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * vertexData.vuiIndices.size(),
-			&(vertexData.vuiIndices[0]), GL_STATIC_DRAW);
+		uint64_t ui64IndicesHash = vertexData.hashIndices();
+		std::cout << "Indices Hash: " << ui64IndicesHash << std::endl;
+
+		this->bufferData(
+			ui64IndicesHash,
+			GL_ELEMENT_ARRAY_BUFFER,
+			sizeof(unsigned int) * vertexData.vuiIndices.size(),
+			(void*)&(vertexData.vuiIndices[0])
+		);
 	}
 
 	int iOffset = 0;

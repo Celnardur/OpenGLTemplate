@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <cstdlib>
 #include "Input.h"
 #include "CoreGraphics/Mesh.h"
 #include "CoreGraphics/Shader.h"
@@ -14,18 +13,6 @@ using std::endl;
 inline void sleep(double dSleepTime)
 {
 	std::this_thread::sleep_for(std::chrono::nanoseconds(int(dSleepTime * 1.0e9)));
-}
-
-bool checkVector(const std::vector<int> & vals, int num)
-{
-	for (int i = 0; i < vals.size(); ++i)
-	{
-		if (vals[i] == num)
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 GLFWwindow * init(const std::string & strWindowTitle, int iWidth, int iHeight);
@@ -45,100 +32,97 @@ int main()
 	// the ID for the message queue associated with main
 	int idMessageQueue = Input::createMessageQueue();
 
-	// Everything between the arrows is not part of the basic framework and
-	// is for testing.
+	// Everything between the arrows is not part of the basic framework and is for testing.
 	// If there is anything in these blocks they can be deleted.
 	// Stuff in these should be deleted before merging (unless it's a fast-forward merge).
 	// Initialize graphics here
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	struct point
+
+	struct vtPoint
 	{
 		float x, y;
 	};
+	VertexData<vtPoint> vdPoint({ 2 });
+	vdPoint.vertices = {
+		{ 0.5f,  0.5f},  // top right
+		{ 0.5f, -0.5f},  // bottom right
+		{-0.5f, -0.5f},  // bottom left
+		{-0.5f,  0.5f}   // top left
+	};
+	vdPoint.vuiIndices = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+
+	Mesh msPoint;
+	msPoint.create<vtPoint>(vdPoint);
+	msPoint.setColor(1.0f, 0.5f, 0.2f);
+
+	struct vtColor
+	{
+		float x, y;
+		float r, g, b;
+	};
+	VertexData<vtColor> vdColor({ 2, 3 });
+	vdColor.vertices = {
+		{ 0.5f,  0.5f,    1.0f, 0.0f, 0.0f},  // top right
+		{ 0.5f, -0.5f,    0.0f, 1.0f, 0.0f},  // bottom right
+		{-0.5f, -0.5f,    0.0f, 0.0f, 1.0f},  // bottom left
+		{-0.5f,  0.5f,    1.0f, 1.0f, 0.0f}   // top left
+	};
+	vdColor.vuiIndices = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+
+	Mesh msColor;
+	msColor.create<vtColor>(vdColor);
+
+	struct vtTexture
+	{
+		float x, y;
+		float j, k;
+	};
+	VertexData<vtTexture> vdTexture({ 2, 0, 2 });
+	vdTexture.vertices = {
+		{ 0.5f,  0.5f,     1.0f, 1.0f},  // top right
+		{ 0.5f, -0.5f,     1.0f, 0.0f},  // bottom right
+		{-0.5f, -0.5f,     0.0f, 0.0f},  // bottom left
+		{-0.5f,  0.5f,     0.0f, 1.0f}   // top left
+	};
+	vdTexture.vuiIndices = {  // note that we start from 0!
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};
+	Texture txImage("Resources/container.jpg");
+
+	Mesh msTexture;
+	msTexture.create<vtTexture>(vdTexture, txImage);
+
 	struct Vertex
 	{
 		float x, y;
 		float r, g, b;
 		float j, k;
 	};
-
-
-	std::vector<int> ivcRand;
-	BufferMap bmRand;
-	int iToInsert;
-
-	for (int i = 0; i < 10000; ++i)
-	{
-		iToInsert = rand();
-		bmRand.insert(iToInsert, iToInsert);
-		ivcRand.push_back(iToInsert);
-	}
-
-	for (auto e : ivcRand)
-	{
-		if (bmRand[e] != e)
-		{
-			std::cout << "Failed to Store: " << e << std::endl;
-		}
-	}
-
-	std::cout << "Started BufferMap" << std::endl;
-	for (auto e : ivcRand)
-	{
-		if (!bmRand.check(e))
-		{
-			std::cout << "Check Failed at: " << e << std::endl;
-		}
-	}
-	std::cout << "Finished BufferMap" << std::endl;
-
-	std::cout << "Started Vector" << std::endl;
-	for (auto e : ivcRand)
-	{
-		checkVector(ivcRand, e);
-	}
-	std::cout << "Started Vector" << std::endl;
-
-
-	VertexData<Vertex> squarePoints({ 2, 3 });
-	squarePoints.vertices = {
-		{ 0.5f,  0.5f,    1.0f, 0.0f, 0.0f},  // top right
-		{ 0.5f, -0.5f,    0.0f, 1.0f, 0.0f},  // bottom right
-		{-0.5f, -0.5f,    0.0f, 0.0f, 1.0f},  // bottom left
-		{-0.5f,  0.5f,    1.0f, 1.0f, 0.0f}   // top left
+	VertexData<Vertex> vdColorTexture({ 2, 3, 2 });
+	vdColorTexture.vertices = {
+		{ 0.5f,  0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f},  // top right
+		{ 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,    1.0f, 0.0f},  // bottom right
+		{-0.5f, -0.5f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f},  // bottom left
+		{-0.5f,  0.5f,    1.0f, 1.0f, 0.0f,    0.0f, 1.0f}   // top left
 	};
-
-	//VertexData<Vertex> squarePoints({ 2, 0, 2 });
-	//squarePoints.vertices = {
-	//	{ 0.5f,  0.5f,     1.0f, 1.0f},  // top right
-	//	{ 0.5f, -0.5f,     1.0f, 0.0f},  // bottom right
-	//	{-0.5f, -0.5f,     0.0f, 0.0f},  // bottom left
-	//	{-0.5f,  0.5f,     0.0f, 1.0f}   // top left
-	//};
-
-	//VertexData<Vertex> squarePoints({ 2, 3, 2 });
-	//squarePoints.vertices = {
-	//	{ 0.5f,  0.5f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f},  // top right
-	//	{ 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,    1.0f, 0.0f},  // bottom right
-	//	{-0.5f, -0.5f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f},  // bottom left
-	//	{-0.5f,  0.5f,    1.0f, 1.0f, 0.0f,    0.0f, 1.0f}   // top left
-	//};
-
-	squarePoints.vuiIndices = {  // note that we start from 0!
+	vdColorTexture.vuiIndices = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
 
-	VertexData<Vertex> second = squarePoints;
+	Mesh msColorTexture;
+	msColorTexture.create<Vertex>(vdColorTexture, txImage);
 
-	Texture texture("Resources/container.jpg");
-
-	Mesh mesh;
-	Mesh mesh2;
-	mesh.create<Vertex>(squarePoints);
-	mesh2.create<Vertex>(squarePoints);
-
-
+	VertexData<vtTexture> copy = vdTexture;
+	Mesh msCopy;
+	msCopy.create<vtTexture>(copy, txImage);
 
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -196,7 +180,7 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		mesh.render();
+		msPoint.render();
         // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         // swap buffer to show screen
@@ -211,7 +195,9 @@ int main()
 
     // Clean up
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	mesh.destroy();
+	msColor.destroy();
+	msTexture.destroy();
+	msColorTexture.destroy();
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
 

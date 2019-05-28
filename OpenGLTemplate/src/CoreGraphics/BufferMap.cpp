@@ -1,5 +1,4 @@
 ﻿#include "BufferMap.h"
-#include <iostream>
 
 BufferMap::BufferMap(double dLoadFactor, size_t initialCapacity)
 {
@@ -97,6 +96,4 @@ void BufferMap::resize(size_t newCapacity)
 	}
 
 	m_buckets = std::move(newBuckets);
-
-	std::cout << "Resized to: " << newCapacity << std::endl;
 }
