@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include <vector>
+#include <string>
 #include "GLIncludes.h"
 
 class Texture

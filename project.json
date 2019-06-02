@@ -1,7 +1,7 @@
 {
 	"Project Name": "BOGLT",
 	"Compiler": "g++",
-	"Flags": "-g -Wall -std=gnu++11",
+	"Flags": "-g -Wall -std=c++11",
 	"Src Root Dir": "./OpenGLTemplate/src",
 	"Other Src Dirs": [],
 	"Include Dirs": [],

@@ -2,6 +2,7 @@
 #define BUFFER_MAP
 
 #include <vector>
+#include <cstdint>
 
 class BufferMap
 {
